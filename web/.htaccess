@@ -1,0 +1,70 @@
+# Flutter Web SPA routing for Apache / cPanel / TheBeeHost
+# Upload the contents of this zip into public_html/
+
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# Prefer HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Flutter Web asset trees must never be SPA-rewritten
+RewriteRule ^assets/ - [L]
+RewriteRule ^canvaskit/ - [L]
+RewriteRule ^icons/ - [L]
+RewriteRule ^brand/ - [L]
+RewriteRule ^resume/ - [L]
+
+# Serve existing files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route all other requests to Flutter's index.html
+RewriteRule ^ index.html [L]
+
+# MIME types Flutter Web needs on Apache/cPanel
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType application/wasm .wasm
+  AddType application/json .json
+  AddType application/octet-stream .bin
+  AddType text/plain .txt
+  AddType application/pdf .pdf
+  AddType image/png .png
+  AddType image/jpeg .jpg .jpeg
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType font/otf .otf
+  AddType font/ttf .ttf
+  AddType font/woff .woff
+  AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 day"
+  ExpiresByType application/javascript "access plus 1 day"
+  ExpiresByType application/wasm "access plus 1 year"
+  ExpiresByType image/png "access plus 1 day"
+  ExpiresByType image/jpeg "access plus 1 day"
+  ExpiresByType image/webp "access plus 1 day"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/pdf "access plus 1 day"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|main\.dart\.js|flutter_bootstrap\.js|flutter_service_worker\.js|version\.json|manifest\.json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>

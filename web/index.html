@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Sajjad Ali, Founder of CodeWend and Senior Full Stack Flutter Developer in Dubai. Flutter, Java Spring Boot, PostgreSQL and Azure DevOps.">
+  <meta name="theme-color" content="#121416">
+
+  <meta property="og:title" content="Sajjad Ali · Portfolio">
+  <meta property="og:description" content="Founder of CodeWend and Senior Full Stack Flutter Developer in Dubai building mobile apps, backend services and automated release pipelines.">
+  <meta property="og:type" content="website">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Sajjad Ali">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-italic.png">
+
+  <link rel="icon" type="image/png" href="favicon-italic.png"/>
+
+  <title>Sajjad Ali · Portfolio</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      background-color: #121416;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      color: #F5F5F0;
+    }
+
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      /* Clean graphite field — linear depth only, no oval blooms. */
+      background-color: #121416;
+      background-image: linear-gradient(
+        180deg,
+        #171a1e 0%,
+        #121416 48%,
+        #0f1113 100%
+      );
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 280ms ease;
+      pointer-events: none;
+    }
+
+    .loading.is-hiding {
+      opacity: 0;
+    }
+
+    .loading-logo {
+      width: 216px;
+      max-width: calc(100vw - 48px);
+      height: auto;
+      aspect-ratio: 83 / 20;
+      display: block;
+      opacity: 0;
+      object-fit: contain;
+      transition: opacity 160ms ease;
+    }
+
+    .loading-logo.is-ready {
+      opacity: 1;
+    }
+
+    @media (min-width: 600px) {
+      .loading-logo {
+        width: 280px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .loading,
+      .loading-logo {
+        transition: none !important;
+      }
+
+      .loading-logo {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading" aria-hidden="true">
+    <img
+      class="loading-logo"
+      id="loading-logo"
+      src="brand/sajjad-ali-italic-logo-transparent.png"
+      alt="Sajjad Ali"
+      width="1328"
+      height="320"
+      decoding="async"
+    />
+  </div>
+
+  <script>
+    (function () {
+      var splash = document.getElementById('loading');
+      var logo = document.getElementById('loading-logo');
+      var appReady = false;
+      var logoReady = false;
+      var hiding = false;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function markLogoReady() {
+        logoReady = true;
+        if (logo) logo.classList.add('is-ready');
+        maybeHide();
+      }
+
+      if (logo) {
+        if (logo.complete && logo.naturalWidth > 0) {
+          markLogoReady();
+        } else {
+          logo.addEventListener('load', markLogoReady);
+          logo.addEventListener('error', markLogoReady);
+        }
+      } else {
+        logoReady = true;
+      }
+
+      function hideSplash() {
+        if (!splash || hiding) return;
+        hiding = true;
+        if (reduceMotion) {
+          if (splash.parentNode) splash.parentNode.removeChild(splash);
+          return;
+        }
+        splash.classList.add('is-hiding');
+        setTimeout(function () {
+          if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+        }, 300);
+      }
+
+      function maybeHide() {
+        if (!appReady) return;
+        if (!(logoReady || reduceMotion)) return;
+        hideSplash();
+      }
+
+      window.addEventListener('flutter-first-frame', function () {
+        appReady = true;
+        maybeHide();
+      });
+    })();
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
